@@ -35,11 +35,12 @@ const Wallet = () => {
                 }
               </div>
             </div>
-          :<p>Please connect your wallet <br/>
+          :<div>
+            <p>Please connect your wallet </p> <br/>
             <button onClick={()=> activateBrowserWallet()}
             className='btn'>
             Connect</button>
-          </p>
+          </div>
       }
     </div>
   )
