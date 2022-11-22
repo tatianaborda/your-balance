@@ -1,44 +1,31 @@
-import './App.css';
-import { useState, useEffect } from 'react'
-import Web3 from 'web3';
+import './App.css'
+import { DAppProvider, Goerli, Mainnet } from '@usedapp/core'
+import Wallet from './components/Wallet.js'
+import { getDefaultProvider } from 'ethers'
+
 
 function App() {
+  const config = {
+    network: [Goerli],
+    readOnlyChainId: Goerli.chainId,
+    readOnlyUrls: {
+      [Goerli.chainId]: 'https://goerli.infura.io/v3/97bea50f2bd64a0fa7e01b1b0d6b6cae',
+      [Mainnet.chainId]: getDefaultProvider('mainnet'),
+    },
+    notifications: {
+      expirationPeriod: 1000, //miliseconds
+      checkInterval: 1000 //miliseconds
+    }
 
-  const [account, setAccount] = useState()
-  const [network, setNetwork] = useState()
-  const [balance, setBalance] = useState()
-
-  const web3 = new Web3(Web3.givenProvider || 'https://localhost:8545')
-  
-  useEffect(()=>{
-    loadAccounts()  
-  })
-
-  useEffect(()=>{
-    loadBalance()
-  }, [account])
-
-  async function loadBalance(){
-    const network = await web3.eth.net.getNetworkType()
-    const balance = await web3.eth.getBalance(account, "latest")
-
-    setNetwork(network)
-    setBalance((balance/1e18).toFixed(4))
   }
-
-  async function loadAccounts(){
-    const accounts = await web3.eth.requestAccounts();
-    setAccount(accounts[0])
-  }
-
   return (
-    <div className="App">
-      <header className="App-header">
-        Descentralized App 
-        <p>Your account: {account}</p>
-        <p>Your balance ({network}) : {balance}</p>
-      </header>
-    </div>
+    <DAppProvider config={config}>
+      <div className="App">
+        <header className="App-header">
+          <Wallet/>
+        </header>
+      </div>
+    </DAppProvider>
   );
 }
 
